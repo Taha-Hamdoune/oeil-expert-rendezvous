@@ -1,12 +1,15 @@
+
 import { useState } from "react";
-import { Menu, X, Phone, Calendar, Languages } from "lucide-react";
+import { Menu, X, Phone, Calendar, Languages, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "@/contexts/TranslationContext";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, setLanguage, t } = useTranslation();
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -93,6 +96,16 @@ export const Header = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => navigate('/admin')}
+              className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 hover:scale-105 transition-all duration-300"
+            >
+              <Shield className="w-4 h-4" />
+              <span className="hidden lg:inline">{t('header.admin')}</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleCall}
               className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 hover:scale-105 transition-all duration-300"
             >
@@ -124,25 +137,25 @@ export const Header = () => {
                 onClick={() => scrollToSection('accueil')}
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600 w-full text-left"
               >
-                Accueil
+                {t('header.home')}
               </button>
               <button 
                 onClick={() => scrollToSection('a-propos')}
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600 w-full text-left"
               >
-                À propos
+                {t('header.about')}
               </button>
               <button 
                 onClick={() => scrollToSection('services')}
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600 w-full text-left"
               >
-                Services
+                {t('header.services')}
               </button>
               <button 
                 onClick={() => scrollToSection('contact')}
                 className="block px-3 py-2 text-gray-700 hover:text-blue-600 w-full text-left"
               >
-                Contact
+                {t('header.contact')}
               </button>
               
               <div className="px-3 py-2">
@@ -170,11 +183,20 @@ export const Header = () => {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => navigate('/admin')}
+                  className="w-full flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  {t('header.admin')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleCall}
                   className="w-full flex items-center gap-2"
                 >
                   <Phone className="w-4 h-4" />
-                  Appeler
+                  {t('header.call')}
                 </Button>
                 <Button
                   size="sm"
@@ -182,7 +204,7 @@ export const Header = () => {
                   className="w-full flex items-center gap-2 bg-gradient-to-r from-blue-600 to-teal-500"
                 >
                   <Calendar className="w-4 h-4" />
-                  Rendez-vous
+                  {t('header.appointment')}
                 </Button>
               </div>
             </div>

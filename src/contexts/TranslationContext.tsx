@@ -20,6 +20,7 @@ const translations = {
     'header.appointment': 'Rendez-vous',
     'header.doctor': 'Dr. Amina Benali',
     'header.specialty': 'Chirurgie Ophtalmologique',
+    'header.admin': 'Espace Admin',
     
     // Services
     'services.title': 'Nos Services Spécialisés',
@@ -37,6 +38,14 @@ const translations = {
     'service.retina': 'Chirurgie de la Rétine',
     'service.followup': 'Suivi Post-Opératoire',
 
+    // Service descriptions
+    'service.eye_exam.desc': 'Dépistage et diagnostic précis des troubles visuels avec équipements de pointe',
+    'service.cataract.desc': 'Intervention de pointe avec implants intra-oculaires dernière génération',
+    'service.glaucoma.desc': 'Prise en charge complète pour préserver votre champ visuel',
+    'service.refractive.desc': 'Correction de la myopie, hypermétropie et astigmatisme au laser',
+    'service.retina.desc': 'Traitement des pathologies rétiniennes avec techniques microchirurgicales',
+    'service.followup.desc': 'Accompagnement personnalisé pour une récupération optimale',
+
     // Appointment
     'appointment.title': 'Prendre Rendez-vous',
     'appointment.subtitle': 'Planifiez votre consultation en ligne. Nous vous contacterons rapidement pour confirmer votre rendez-vous.',
@@ -52,6 +61,25 @@ const translations = {
     'appointment.time': 'Heure souhaitée',
     'appointment.comments': 'Commentaires ou informations supplémentaires',
     'appointment.submit': 'Envoyer la demande de rendez-vous',
+
+    // Admin
+    'admin.title': 'Espace Administrateur',
+    'admin.login': 'Connexion Admin',
+    'admin.username': 'Nom d\'utilisateur',
+    'admin.password': 'Mot de passe',
+    'admin.login_button': 'Se connecter',
+    'admin.appointments': 'Gestion des Rendez-vous',
+    'admin.patient': 'Patient',
+    'admin.service': 'Service',
+    'admin.datetime': 'Date et Heure',
+    'admin.status': 'Statut',
+    'admin.actions': 'Actions',
+    'admin.accept': 'Accepter',
+    'admin.reject': 'Refuser',
+    'admin.pending': 'En attente',
+    'admin.accepted': 'Accepté',
+    'admin.rejected': 'Refusé',
+    'admin.logout': 'Déconnexion',
   },
   ar: {
     // Header
@@ -63,6 +91,7 @@ const translations = {
     'header.appointment': 'موعد',
     'header.doctor': 'د. أمينة بنعلي',
     'header.specialty': 'جراحة العيون',
+    'header.admin': 'منطقة الإدارة',
     
     // Services
     'services.title': 'خدماتنا المتخصصة',
@@ -80,6 +109,14 @@ const translations = {
     'service.retina': 'جراحة الشبكية',
     'service.followup': 'المتابعة بعد الجراحة',
 
+    // Service descriptions
+    'service.eye_exam.desc': 'فحص ودراسة دقيقة للاضطرابات البصرية بأحدث المعدات',
+    'service.cataract.desc': 'تدخل متقدم مع زراعة عدسات داخل العين من أحدث جيل',
+    'service.glaucoma.desc': 'رعاية شاملة للحفاظ على مجال الرؤية',
+    'service.refractive.desc': 'تصحيح قصر النظر وطول النظر واللابؤرية بالليزر',
+    'service.retina.desc': 'علاج أمراض الشبكية بتقنيات الجراحة المجهرية',
+    'service.followup.desc': 'مرافقة شخصية للتعافي الأمثل',
+
     // Appointment
     'appointment.title': 'حجز موعد',
     'appointment.subtitle': 'خطط لاستشارتك عبر الإنترنت. سنتصل بك قريباً لتأكيد موعدك.',
@@ -95,6 +132,25 @@ const translations = {
     'appointment.time': 'الوقت المرغوب',
     'appointment.comments': 'تعليقات أو معلومات إضافية',
     'appointment.submit': 'إرسال طلب الموعد',
+
+    // Admin
+    'admin.title': 'منطقة الإدارة',
+    'admin.login': 'تسجيل دخول الإدارة',
+    'admin.username': 'اسم المستخدم',
+    'admin.password': 'كلمة المرور',
+    'admin.login_button': 'تسجيل الدخول',
+    'admin.appointments': 'إدارة المواعيد',
+    'admin.patient': 'المريض',
+    'admin.service': 'الخدمة',
+    'admin.datetime': 'التاريخ والوقت',
+    'admin.status': 'الحالة',
+    'admin.actions': 'الإجراءات',
+    'admin.accept': 'قبول',
+    'admin.reject': 'رفض',
+    'admin.pending': 'في الانتظار',
+    'admin.accepted': 'مقبول',
+    'admin.rejected': 'مرفوض',
+    'admin.logout': 'تسجيل الخروج',
   },
   en: {
     // Header
@@ -106,6 +162,7 @@ const translations = {
     'header.appointment': 'Appointment',
     'header.doctor': 'Dr. Amina Benali',
     'header.specialty': 'Ophthalmic Surgery',
+    'header.admin': 'Admin Area',
     
     // Services
     'services.title': 'Our Specialized Services',
@@ -123,6 +180,14 @@ const translations = {
     'service.retina': 'Retinal Surgery',
     'service.followup': 'Post-Operative Follow-up',
 
+    // Service descriptions
+    'service.eye_exam.desc': 'Precise screening and diagnosis of visual disorders with cutting-edge equipment',
+    'service.cataract.desc': 'State-of-the-art intervention with latest generation intraocular implants',
+    'service.glaucoma.desc': 'Comprehensive care to preserve your visual field',
+    'service.refractive.desc': 'Laser correction of myopia, hyperopia and astigmatism',
+    'service.retina.desc': 'Treatment of retinal pathologies with microsurgical techniques',
+    'service.followup.desc': 'Personalized support for optimal recovery',
+
     // Appointment
     'appointment.title': 'Book Appointment',
     'appointment.subtitle': 'Schedule your consultation online. We will contact you quickly to confirm your appointment.',
@@ -138,6 +203,25 @@ const translations = {
     'appointment.time': 'Preferred time',
     'appointment.comments': 'Comments or additional information',
     'appointment.submit': 'Send appointment request',
+
+    // Admin
+    'admin.title': 'Administrator Area',
+    'admin.login': 'Admin Login',
+    'admin.username': 'Username',
+    'admin.password': 'Password',
+    'admin.login_button': 'Sign In',
+    'admin.appointments': 'Appointment Management',
+    'admin.patient': 'Patient',
+    'admin.service': 'Service',
+    'admin.datetime': 'Date and Time',
+    'admin.status': 'Status',
+    'admin.actions': 'Actions',
+    'admin.accept': 'Accept',
+    'admin.reject': 'Reject',
+    'admin.pending': 'Pending',
+    'admin.accepted': 'Accepted',
+    'admin.rejected': 'Rejected',
+    'admin.logout': 'Logout',
   }
 };
 

@@ -4,15 +4,17 @@ import { Eye, Scissors, Shield, Activity, Clock, Heart, ArrowLeft, Calendar, Che
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/contexts/TranslationContext";
 
 const ServiceDetail = () => {
   const { serviceId } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const serviceDetails = {
     "examen-complet": {
       icon: Eye,
-      title: "Examen Complet de la Vue",
+      title: t('service.eye_exam'),
       description: "Dépistage et diagnostic précis des troubles visuels avec équipements de pointe",
       duration: "45-60 minutes",
       price: "À partir de 800 DH",
@@ -191,7 +193,13 @@ const ServiceDetail = () => {
   const IconComponent = service.icon;
 
   const scrollToAppointment = () => {
-    navigate('/?section=rendez-vous');
+    navigate('/#rendez-vous');
+    setTimeout(() => {
+      const element = document.getElementById('rendez-vous');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   return (
@@ -256,7 +264,6 @@ const ServiceDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Avantages */}
           <Card className="hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -276,7 +283,6 @@ const ServiceDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Préparation */}
           <Card className="hover:shadow-xl transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -320,7 +326,7 @@ const ServiceDetail = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => navigate('/?section=contact')}
+                  onClick={() => navigate('/#contact')}
                   className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300 hover:scale-105"
                 >
                   Nous contacter

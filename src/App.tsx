@@ -8,6 +8,7 @@ import { TranslationProvider } from "@/contexts/TranslationContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ServiceDetail from "./components/ServiceDetail";
+import AdminDashboard from "./components/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/service/:serviceId" element={<ServiceDetail />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
