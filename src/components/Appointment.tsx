@@ -8,9 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { AppointmentConfirmation } from "@/components/AppointmentConfirmation";
+import { useTranslation } from "@/contexts/TranslationContext";
+import { AppointmentData } from "@/utils/pdfGenerator";
 
 export const Appointment = () => {
   const { toast } = useToast();
+  const { t } = useTranslation();
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [formData, setFormData] = useState({
     nom: '',
     telephone: '',
@@ -25,7 +30,7 @@ export const Appointment = () => {
 
   const services = [
     "Examen complet de la vue",
-    "Chirurgie de la cataracte",
+    "Chirurgie de la cataracte", 
     "Traitement du glaucome",
     "Chirurgie réfractive (LASIK)",
     "Chirurgie de la rétine",
@@ -45,7 +50,6 @@ export const Appointment = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation basique
     if (!formData.nom || !formData.telephone || !formData.cin || !formData.dateNaissance || !formData.service || !formData.date || !formData.heure) {
       toast({
         title: "Erreur",
@@ -55,14 +59,12 @@ export const Appointment = () => {
       return;
     }
 
-    // Ici, les données seraient normalement envoyées à la base de données
-    // Pour l'instant, on affiche juste un message de succès
-    toast({
-      title: "Rendez-vous demandé avec succès !",
-      description: "Nous vous contacterons dans les plus brefs délais pour confirmer votre rendez-vous.",
-    });
+    console.log('Données du rendez-vous:', formData);
+    setShowConfirmation(true);
+  };
 
-    // Reset du formulaire
+  const handleConfirmed = () => {
+    setShowConfirmation(false);
     setFormData({
       nom: '',
       telephone: '',
@@ -74,31 +76,46 @@ export const Appointment = () => {
       heure: '',
       commentaires: ''
     });
-
-    console.log('Données du rendez-vous:', formData);
   };
+
+  const handleBackToForm = () => {
+    setShowConfirmation(false);
+  };
+
+  if (showConfirmation) {
+    return (
+      <section id="rendez-vous" className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AppointmentConfirmation
+            appointmentData={formData as AppointmentData}
+            onConfirmed={handleConfirmed}
+            onBack={handleBackToForm}
+          />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="rendez-vous" className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Prendre Rendez-vous
+            {t('appointment.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Planifiez votre consultation en ligne. Nous vous contacterons rapidement 
-            pour confirmer votre rendez-vous.
+            {t('appointment.subtitle')}
           </p>
         </div>
 
-        <Card className="border-0 shadow-xl">
+        <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-teal-500 text-white rounded-t-lg">
             <div className="flex items-center gap-3">
               <Calendar className="w-8 h-8" />
               <div>
-                <CardTitle className="text-2xl">Formulaire de Rendez-vous</CardTitle>
+                <CardTitle className="text-2xl">{t('appointment.form_title')}</CardTitle>
                 <CardDescription className="text-blue-100">
-                  Remplissez ce formulaire pour demander un rendez-vous
+                  {t('appointment.form_subtitle')}
                 </CardDescription>
               </div>
             </div>
@@ -106,12 +123,11 @@ export const Appointment = () => {
           
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Informations personnelles */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="nom" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <User className="w-4 h-4" />
-                    Nom complet *
+                    {t('appointment.name')} *
                   </Label>
                   <Input
                     id="nom"
@@ -119,7 +135,7 @@ export const Appointment = () => {
                     value={formData.nom}
                     onChange={(e) => handleInputChange('nom', e.target.value)}
                     placeholder="Votre nom complet"
-                    className="h-12"
+                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                     required
                   />
                 </div>
@@ -127,7 +143,7 @@ export const Appointment = () => {
                 <div className="space-y-2">
                   <Label htmlFor="telephone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <Phone className="w-4 h-4" />
-                    Numéro de téléphone *
+                    {t('appointment.phone')} *
                   </Label>
                   <Input
                     id="telephone"
@@ -135,7 +151,7 @@ export const Appointment = () => {
                     value={formData.telephone}
                     onChange={(e) => handleInputChange('telephone', e.target.value)}
                     placeholder="+212 6XX XXX XXX"
-                    className="h-12"
+                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                     required
                   />
                 </div>
@@ -145,7 +161,7 @@ export const Appointment = () => {
                 <div className="space-y-2">
                   <Label htmlFor="cin" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <IdCard className="w-4 h-4" />
-                    Numéro d'identification nationale (CIN) *
+                    {t('appointment.cin')} *
                   </Label>
                   <Input
                     id="cin"
@@ -153,7 +169,7 @@ export const Appointment = () => {
                     value={formData.cin}
                     onChange={(e) => handleInputChange('cin', e.target.value)}
                     placeholder="Votre numéro CIN"
-                    className="h-12"
+                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                     required
                   />
                 </div>
@@ -161,14 +177,14 @@ export const Appointment = () => {
                 <div className="space-y-2">
                   <Label htmlFor="dateNaissance" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <Cake className="w-4 h-4" />
-                    Date de naissance *
+                    {t('appointment.birth_date')} *
                   </Label>
                   <Input
                     id="dateNaissance"
                     type="date"
                     value={formData.dateNaissance}
                     onChange={(e) => handleInputChange('dateNaissance', e.target.value)}
-                    className="h-12"
+                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                     required
                   />
                 </div>
@@ -177,7 +193,7 @@ export const Appointment = () => {
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   <Mail className="w-4 h-4" />
-                  Adresse e-mail (facultative)
+                  {t('appointment.email')}
                 </Label>
                 <Input
                   id="email"
@@ -185,18 +201,17 @@ export const Appointment = () => {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="votre.email@exemple.com"
-                  className="h-12"
+                  className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                 />
               </div>
 
-              {/* Service demandé */}
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                   <FileText className="w-4 h-4" />
-                  Type de service demandé *
+                  {t('appointment.service')} *
                 </Label>
                 <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
-                  <SelectTrigger className="h-12">
+                  <SelectTrigger className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300">
                     <SelectValue placeholder="Sélectionnez le service souhaité" />
                   </SelectTrigger>
                   <SelectContent>
@@ -209,19 +224,18 @@ export const Appointment = () => {
                 </Select>
               </div>
 
-              {/* Date et heure */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="date" className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    Date souhaitée *
+                    {t('appointment.date')} *
                   </Label>
                   <Input
                     id="date"
                     type="date"
                     value={formData.date}
                     onChange={(e) => handleInputChange('date', e.target.value)}
-                    className="h-12"
+                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                     min={new Date().toISOString().split('T')[0]}
                     required
                   />
@@ -230,10 +244,10 @@ export const Appointment = () => {
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    Heure souhaitée *
+                    {t('appointment.time')} *
                   </Label>
                   <Select value={formData.heure} onValueChange={(value) => handleInputChange('heure', value)}>
-                    <SelectTrigger className="h-12">
+                    <SelectTrigger className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300">
                       <SelectValue placeholder="Sélectionnez l'heure" />
                     </SelectTrigger>
                     <SelectContent>
@@ -247,35 +261,32 @@ export const Appointment = () => {
                 </div>
               </div>
 
-              {/* Commentaires */}
               <div className="space-y-2">
                 <Label htmlFor="commentaires" className="text-sm font-medium text-gray-700">
-                  Commentaires ou informations supplémentaires
+                  {t('appointment.comments')}
                 </Label>
                 <Textarea
                   id="commentaires"
                   value={formData.commentaires}
                   onChange={(e) => handleInputChange('commentaires', e.target.value)}
                   placeholder="Décrivez brièvement vos symptômes ou préoccupations..."
-                  className="min-h-[100px]"
+                  className="min-h-[100px] hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
                 />
               </div>
 
-              {/* Note importante */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Note importante :</strong> Ce formulaire constitue une demande de rendez-vous. 
-                  Notre équipe vous contactera dans les 24h pour confirmer la disponibilité et finaliser votre rendez-vous.
+                  <strong>Note importante :</strong> Après envoi, vous recevrez un code de confirmation par SMS 
+                  pour valider votre demande et télécharger votre document de confirmation.
                 </p>
               </div>
 
-              {/* Bouton d'envoi */}
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white py-4 text-lg font-medium"
+                className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white py-4 text-lg font-medium hover:scale-105 hover:shadow-lg transition-all duration-300 transform"
               >
-                Envoyer la demande de rendez-vous
+                {t('appointment.submit')}
               </Button>
             </form>
           </CardContent>

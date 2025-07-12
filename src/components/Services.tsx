@@ -1,11 +1,15 @@
 
-import { Eye, Scissors, Shield, Activity, Clock, Heart } from "lucide-react";
+import { Eye, Scissors, Shield, Activity, Clock, Heart, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export const Services = () => {
+  const navigate = useNavigate();
+
   const services = [
     {
+      id: "examen-complet",
       icon: Eye,
       title: "Examen Complet de la Vue",
       description: "Dépistage et diagnostic précis des troubles visuels avec équipements de pointe.",
@@ -13,6 +17,7 @@ export const Services = () => {
       color: "bg-blue-100 text-blue-600"
     },
     {
+      id: "chirurgie-cataracte",
       icon: Scissors,
       title: "Chirurgie de la Cataracte",
       description: "Intervention de pointe avec implants intra-oculaires dernière génération.",
@@ -20,6 +25,7 @@ export const Services = () => {
       color: "bg-teal-100 text-teal-600"
     },
     {
+      id: "traitement-glaucome",
       icon: Shield,
       title: "Traitement du Glaucome",
       description: "Prise en charge complète pour préserver votre champ visuel.",
@@ -27,6 +33,7 @@ export const Services = () => {
       color: "bg-green-100 text-green-600"
     },
     {
+      id: "chirurgie-refractive",
       icon: Activity,
       title: "Chirurgie Réfractive",
       description: "Correction de la myopie, hypermétropie et astigmatisme au laser.",
@@ -34,6 +41,7 @@ export const Services = () => {
       color: "bg-purple-100 text-purple-600"
     },
     {
+      id: "chirurgie-retine",
       icon: Heart,
       title: "Chirurgie de la Rétine",
       description: "Traitement des pathologies rétiniennes avec techniques microchirurgicales.",
@@ -41,6 +49,7 @@ export const Services = () => {
       color: "bg-red-100 text-red-600"
     },
     {
+      id: "suivi-post-operatoire",
       icon: Clock,
       title: "Suivi Post-Opératoire",
       description: "Accompagnement personnalisé pour une récupération optimale.",
@@ -54,6 +63,10 @@ export const Services = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleServiceClick = (serviceId: string) => {
+    navigate(`/service/${serviceId}`);
   };
 
   return (
@@ -73,12 +86,12 @@ export const Services = () => {
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 cursor-pointer group">
                 <CardHeader className="pb-4">
-                  <div className={`w-14 h-14 rounded-xl ${service.color} flex items-center justify-center mb-4`}>
+                  <div className={`w-14 h-14 rounded-xl ${service.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <IconComponent className="w-7 h-7" />
                   </div>
-                  <CardTitle className="text-xl font-semibold text-gray-900">
+                  <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
                     {service.title}
                   </CardTitle>
                   <CardDescription className="text-gray-600 text-base">
@@ -86,7 +99,7 @@ export const Services = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <ul className="space-y-2">
+                  <ul className="space-y-2 mb-4">
                     {service.details.map((detail, detailIndex) => (
                       <li key={detailIndex} className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-3"></div>
@@ -94,6 +107,14 @@ export const Services = () => {
                       </li>
                     ))}
                   </ul>
+                  <Button
+                    onClick={() => handleServiceClick(service.id)}
+                    variant="outline"
+                    className="w-full group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all duration-300 hover:scale-105"
+                  >
+                    En savoir plus
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
                 </CardContent>
               </Card>
             );
@@ -101,7 +122,7 @@ export const Services = () => {
         </div>
 
         <div className="text-center">
-          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto">
+          <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto hover:shadow-xl transition-shadow duration-300">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Besoin d'une consultation ?
             </h3>
@@ -112,7 +133,7 @@ export const Services = () => {
             <Button
               size="lg"
               onClick={scrollToAppointment}
-              className="bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white px-8 py-4"
+              className="bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white px-8 py-4 hover:scale-105 hover:shadow-lg transition-all duration-300 transform"
             >
               Prendre rendez-vous maintenant
             </Button>
