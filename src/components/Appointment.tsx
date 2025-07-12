@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Calendar, Clock, User, Phone, Mail, FileText } from "lucide-react";
+import { Calendar, Clock, User, Phone, Mail, FileText, IdCard, Cake } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ export const Appointment = () => {
     nom: '',
     telephone: '',
     email: '',
+    cin: '',
+    dateNaissance: '',
     service: '',
     date: '',
     heure: '',
@@ -44,7 +46,7 @@ export const Appointment = () => {
     e.preventDefault();
     
     // Validation basique
-    if (!formData.nom || !formData.telephone || !formData.service || !formData.date || !formData.heure) {
+    if (!formData.nom || !formData.telephone || !formData.cin || !formData.dateNaissance || !formData.service || !formData.date || !formData.heure) {
       toast({
         title: "Erreur",
         description: "Veuillez remplir tous les champs obligatoires.",
@@ -65,6 +67,8 @@ export const Appointment = () => {
       nom: '',
       telephone: '',
       email: '',
+      cin: '',
+      dateNaissance: '',
       service: '',
       date: '',
       heure: '',
@@ -131,6 +135,39 @@ export const Appointment = () => {
                     value={formData.telephone}
                     onChange={(e) => handleInputChange('telephone', e.target.value)}
                     placeholder="+212 6XX XXX XXX"
+                    className="h-12"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="cin" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <IdCard className="w-4 h-4" />
+                    Numéro d'identification nationale (CIN) *
+                  </Label>
+                  <Input
+                    id="cin"
+                    type="text"
+                    value={formData.cin}
+                    onChange={(e) => handleInputChange('cin', e.target.value)}
+                    placeholder="Votre numéro CIN"
+                    className="h-12"
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="dateNaissance" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                    <Cake className="w-4 h-4" />
+                    Date de naissance *
+                  </Label>
+                  <Input
+                    id="dateNaissance"
+                    type="date"
+                    value={formData.dateNaissance}
+                    onChange={(e) => handleInputChange('dateNaissance', e.target.value)}
                     className="h-12"
                     required
                   />

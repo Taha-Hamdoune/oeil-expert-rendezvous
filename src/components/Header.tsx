@@ -1,10 +1,12 @@
 
 import { useState } from "react";
-import { Menu, X, Phone, Calendar } from "lucide-react";
+import { Menu, X, Phone, Calendar, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [language, setLanguage] = useState("fr");
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -13,6 +15,19 @@ export const Header = () => {
     }
     setIsMenuOpen(false);
   };
+
+  const handleCall = () => {
+    const phoneNumber = "+212 5XX XX XX XX"; // Remplacez par le vrai numéro
+    if (confirm(`Voulez-vous appeler la clinique au ${phoneNumber} ?`)) {
+      window.location.href = `tel:${phoneNumber}`;
+    }
+  };
+
+  const languages = [
+    { code: "fr", name: "Français", flag: "🇫🇷" },
+    { code: "ar", name: "العربية", flag: "🇲🇦" },
+    { code: "en", name: "English", flag: "🇺🇸" }
+  ];
 
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
@@ -59,10 +74,30 @@ export const Header = () => {
 
           {/* Actions Desktop */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Sélecteur de langue */}
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger className="w-24 h-8 text-xs">
+                <div className="flex items-center gap-1">
+                  <Languages className="w-3 h-3" />
+                  <SelectValue />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code}>
+                    <div className="flex items-center gap-2">
+                      <span>{lang.flag}</span>
+                      <span className="text-xs">{lang.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <Button
               variant="outline"
               size="sm"
-              onClick={() => scrollToSection('contact')}
+              onClick={handleCall}
               className="flex items-center gap-2"
             >
               <Phone className="w-4 h-4" />
@@ -115,11 +150,34 @@ export const Header = () => {
               >
                 Contact
               </button>
+              
+              {/* Sélecteur de langue mobile */}
+              <div className="px-3 py-2">
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className="w-full h-10">
+                    <div className="flex items-center gap-2">
+                      <Languages className="w-4 h-4" />
+                      <SelectValue />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        <div className="flex items-center gap-2">
+                          <span>{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <div className="px-3 py-2 space-y-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => scrollToSection('contact')}
+                  onClick={handleCall}
                   className="w-full flex items-center gap-2"
                 >
                   <Phone className="w-4 h-4" />
