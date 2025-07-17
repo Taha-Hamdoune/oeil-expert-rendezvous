@@ -20,9 +20,9 @@ export const Header = () => {
   };
 
   const handleCall = () => {
-    const phoneNumber = "+212 5XX XX XX XX";
+    const phoneNumber = "+212 522 12 34 56";
     if (confirm(`Voulez-vous appeler la clinique au ${phoneNumber} ?`)) {
-      window.location.href = `tel:${phoneNumber}`;
+      window.location.href = `tel:${phoneNumber.replace(/\s/g, '')}`;
     }
   };
 
@@ -74,6 +74,16 @@ export const Header = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/admin')}
+              className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 hover:scale-105 transition-all duration-300"
+            >
+              <Shield className="w-4 h-4" />
+              <span className="hidden lg:inline">{t('header.admin')}</span>
+            </Button>
+
             <Select value={language} onValueChange={setLanguage}>
               <SelectTrigger className="w-32 h-8 text-xs hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
                 <div className="flex items-center gap-1">
@@ -92,16 +102,6 @@ export const Header = () => {
                 ))}
               </SelectContent>
             </Select>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate('/admin')}
-              className="flex items-center gap-2 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 hover:scale-105 transition-all duration-300"
-            >
-              <Shield className="w-4 h-4" />
-              <span className="hidden lg:inline">{t('header.admin')}</span>
-            </Button>
 
             <Button
               variant="outline"
@@ -158,7 +158,17 @@ export const Header = () => {
                 {t('header.contact')}
               </button>
               
-              <div className="px-3 py-2">
+              <div className="px-3 py-2 space-y-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate('/admin')}
+                  className="w-full flex items-center gap-2"
+                >
+                  <Shield className="w-4 h-4" />
+                  {t('header.admin')}
+                </Button>
+                
                 <Select value={language} onValueChange={setLanguage}>
                   <SelectTrigger className="w-full h-10">
                     <div className="flex items-center gap-2">
@@ -177,18 +187,7 @@ export const Header = () => {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
-              
-              <div className="px-3 py-2 space-y-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate('/admin')}
-                  className="w-full flex items-center gap-2"
-                >
-                  <Shield className="w-4 h-4" />
-                  {t('header.admin')}
-                </Button>
+                
                 <Button
                   variant="outline"
                   size="sm"

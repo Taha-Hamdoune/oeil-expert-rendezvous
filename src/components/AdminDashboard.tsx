@@ -6,36 +6,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Lock, Users, Calendar, CheckCircle, XCircle, LogOut } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Lock, Users, Calendar, CheckCircle, XCircle, LogOut, Home, MessageSquare, Mail } from "lucide-react";
 import { useTranslation } from "@/contexts/TranslationContext";
-
-interface Appointment {
-  id: string;
-  nom: string;
-  telephone: string;
-  email: string;
-  cin: string;
-  dateNaissance: string;
-  service: string;
-  date: string;
-  heure: string;
-  commentaires: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: string;
-}
+import { useNavigate } from "react-router-dom";
+import { appointmentStorage, messageStorage, StoredAppointment, StoredMessage } from "@/utils/localStorageService";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [appointments, setAppointments] = useState<StoredAppointment[]>([]);
+  const [messages, setMessages] = useState<StoredMessage[]>([]);
 
-  // Simuler les données de rendez-vous
+  // Charger les données au montage du composant
   useEffect(() => {
     if (isLoggedIn) {
-      // Simuler des données de rendez-vous
-      const mockAppointments: Appointment[] = [
+      loadData();
+    }
+  }, [isLoggedIn]);
+
+  const loadData = () => {
+    const storedAppointments = appointmentStorage.getAppointments();
+    const storedMessages = messageStorage.getMessages();
+    
+    // Ajouter quelques données de démonstration si vides
+    if (storedAppointments.length === 0) {
+      const mockAppointments: StoredAppointment[] = [
         {
           id: '1',
           nom: 'Ahmed Benali',
@@ -65,9 +64,15 @@ const AdminDashboard = () => {
           createdAt: '2024-01-12T14:20:00Z'
         }
       ];
+      
+      mockAppointments.forEach(apt => appointmentStorage.saveAppointment(apt));
       setAppointments(mockAppointments);
+    } else {
+      setAppointments(storedAppointments);
     }
-  }, [isLoggedIn]);
+
+    setMessages(storedMessages);
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,11 +85,8 @@ const AdminDashboard = () => {
   };
 
   const handleStatusChange = (appointmentId: string, newStatus: 'accepted' | 'rejected') => {
-    setAppointments(prev => 
-      prev.map(apt => 
-        apt.id === appointmentId ? { ...apt, status: newStatus } : apt
-      )
-    );
+    const updatedAppointments = appointmentStorage.updateAppointment(appointmentId, { status: newStatus });
+    setAppointments(updatedAppointments);
   };
 
   const getStatusBadge = (status: string) => {
@@ -98,6 +100,16 @@ const AdminDashboard = () => {
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (!isLoggedIn) {
@@ -172,21 +184,31 @@ const AdminDashboard = () => {
               </div>
               <h1 className="text-2xl font-bold text-gray-900">{t('admin.title')}</h1>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => setIsLoggedIn(false)}
-              className="flex items-center gap-2 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-all duration-300"
-            >
-              <LogOut className="w-4 h-4" />
-              {t('admin.logout')}
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300"
+              >
+                <Home className="w-4 h-4" />
+                Retour à l'accueil
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setIsLoggedIn(false)}
+                className="flex items-center gap-2 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                {t('admin.logout')}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -224,86 +246,147 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            <Card className="hover:shadow-lg transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Messages</p>
+                    <p className="text-3xl font-bold text-purple-600">{messages.length}</p>
+                  </div>
+                  <MessageSquare className="w-8 h-8 text-purple-500" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        <Card className="shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold text-gray-900">{t('admin.appointments')}</CardTitle>
-            <CardDescription>Gérez les demandes de rendez-vous des patients</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('admin.patient')}</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>{t('admin.service')}</TableHead>
-                    <TableHead>{t('admin.datetime')}</TableHead>
-                    <TableHead>{t('admin.status')}</TableHead>
-                    <TableHead>{t('admin.actions')}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {appointments.map((appointment) => (
-                    <TableRow key={appointment.id} className="hover:bg-gray-50">
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-gray-900">{appointment.nom}</p>
-                          <p className="text-sm text-gray-600">CIN: {appointment.cin}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="text-sm text-gray-900">{appointment.telephone}</p>
-                          {appointment.email && (
-                            <p className="text-sm text-gray-600">{appointment.email}</p>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <p className="font-medium text-gray-900">{appointment.service}</p>
-                      </TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-gray-900">{appointment.date}</p>
-                          <p className="text-sm text-gray-600">{appointment.heure}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {getStatusBadge(appointment.status)}
-                      </TableCell>
-                      <TableCell>
-                        {appointment.status === 'pending' && (
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              onClick={() => handleStatusChange(appointment.id, 'accepted')}
-                              className="bg-green-600 hover:bg-green-700 text-white hover:scale-105 transition-all duration-300"
-                            >
-                              <CheckCircle className="w-4 h-4 mr-1" />
-                              {t('admin.accept')}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleStatusChange(appointment.id, 'rejected')}
-                              className="border-red-300 text-red-700 hover:bg-red-50 hover:scale-105 transition-all duration-300"
-                            >
-                              <XCircle className="w-4 h-4 mr-1" />
-                              {t('admin.reject')}
-                            </Button>
+        <Tabs defaultValue="appointments" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="appointments" className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Rendez-vous
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Messages
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="appointments">
+            <Card className="shadow-xl">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900">{t('admin.appointments')}</CardTitle>
+                <CardDescription>Gérez les demandes de rendez-vous des patients</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t('admin.patient')}</TableHead>
+                        <TableHead>Contact</TableHead>
+                        <TableHead>{t('admin.service')}</TableHead>
+                        <TableHead>{t('admin.datetime')}</TableHead>
+                        <TableHead>{t('admin.status')}</TableHead>
+                        <TableHead>{t('admin.actions')}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {appointments.map((appointment) => (
+                        <TableRow key={appointment.id} className="hover:bg-gray-50">
+                          <TableCell>
+                            <div>
+                              <p className="font-medium text-gray-900">{appointment.nom}</p>
+                              <p className="text-sm text-gray-600">CIN: {appointment.cin}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="text-sm text-gray-900">{appointment.telephone}</p>
+                              {appointment.email && (
+                                <p className="text-sm text-gray-600">{appointment.email}</p>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <p className="font-medium text-gray-900">{appointment.service}</p>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium text-gray-900">{appointment.date}</p>
+                              <p className="text-sm text-gray-600">{appointment.heure}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {getStatusBadge(appointment.status)}
+                          </TableCell>
+                          <TableCell>
+                            {appointment.status === 'pending' && (
+                              <div className="flex gap-2">
+                                <Button
+                                  size="sm"
+                                  onClick={() => handleStatusChange(appointment.id, 'accepted')}
+                                  className="bg-green-600 hover:bg-green-700 text-white hover:scale-105 transition-all duration-300"
+                                >
+                                  <CheckCircle className="w-4 h-4 mr-1" />
+                                  {t('admin.accept')}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => handleStatusChange(appointment.id, 'rejected')}
+                                  className="border-red-300 text-red-700 hover:bg-red-50 hover:scale-105 transition-all duration-300"
+                                >
+                                  <XCircle className="w-4 h-4 mr-1" />
+                                  {t('admin.reject')}
+                                </Button>
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="messages">
+            <Card className="shadow-xl">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900">Messages de Contact</CardTitle>
+                <CardDescription>Consultez les messages envoyés par les visiteurs</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {messages.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                      <p>Aucun message reçu</p>
+                    </div>
+                  ) : (
+                    messages.map((message) => (
+                      <Card key={message.id} className="hover:shadow-md transition-shadow">
+                        <CardContent className="p-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-semibold text-gray-900">{message.nom}</h3>
+                              <p className="text-sm text-gray-600">{message.email}</p>
+                            </div>
+                            <p className="text-xs text-gray-500">{formatDate(message.createdAt)}</p>
                           </div>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+                          <h4 className="font-medium text-gray-800 mb-2">{message.sujet}</h4>
+                          <p className="text-gray-700 whitespace-pre-wrap">{message.message}</p>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

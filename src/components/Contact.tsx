@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { messageStorage } from "@/utils/localStorageService";
 
 export const Contact = () => {
   const { toast } = useToast();
@@ -29,13 +30,25 @@ export const Contact = () => {
       return;
     }
 
+    // Sauvegarder le message dans le stockage local
+    const newMessage = {
+      id: Date.now().toString(),
+      nom: contactForm.nom,
+      email: contactForm.email,
+      sujet: contactForm.sujet || 'Aucun sujet',
+      message: contactForm.message,
+      createdAt: new Date().toISOString()
+    };
+
+    messageStorage.saveMessage(newMessage);
+
     toast({
       title: "Message envoyé !",
       description: "Nous vous répondrons dans les plus brefs délais.",
     });
 
     setContactForm({ nom: '', email: '', sujet: '', message: '' });
-    console.log('Message de contact:', contactForm);
+    console.log('Message de contact sauvegardé:', newMessage);
   };
 
   const handleInputChange = (field: string, value: string) => {

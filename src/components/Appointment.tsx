@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import { Calendar, Clock, User, Phone, Mail, FileText, IdCard, Cake } from "lucide-react";
+import { Calendar } from "lucide-react";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,14 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { AppointmentConfirmation } from "@/components/AppointmentConfirmation";
 import { useTranslation } from "@/contexts/TranslationContext";
-import { AppointmentData } from "@/utils/pdfGenerator";
+import { useNavigate } from "react-router-dom";
+import { appointmentStorage } from "@/utils/localStorageService";
 
 export const Appointment = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nom: '',
     telephone: '',
@@ -29,28 +30,31 @@ export const Appointment = () => {
   });
 
   const services = [
-    "Examen complet de la vue",
-    "Chirurgie de la cataracte", 
-    "Traitement du glaucome",
-    "Chirurgie réfractive (LASIK)",
-    "Chirurgie de la rétine",
-    "Consultation de suivi",
-    "Urgence ophtalmologique"
+    { value: 'Examen complet de la vue', label: t('services.vue') },
+    { value: 'Adaptation de lentilles de contact', label: t('services.lentilles') },
+    { value: 'Chirurgie de la cataracte', label: t('services.cataracte') },
+    { value: 'Traitement du glaucome', label: t('services.glaucome') },
+    { value: 'Suivi de la dégénérescence maculaire', label: t('services.maculaire') }
   ];
 
-  const heures = [
+  const heuresDisponibles = [
     "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"
+    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"
   ];
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSelectChange = (id: string, value: string) => {
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.nom || !formData.telephone || !formData.cin || !formData.dateNaissance || !formData.service || !formData.date || !formData.heure) {
+    if (!formData.nom || !formData.telephone || !formData.dateNaissance || !formData.service || !formData.date || !formData.heure) {
       toast({
         title: "Erreur",
         description: "Veuillez remplir tous les champs obligatoires.",
@@ -59,200 +63,149 @@ export const Appointment = () => {
       return;
     }
 
-    console.log('Données du rendez-vous:', formData);
-    setShowConfirmation(true);
-  };
+    // Sauvegarder le rendez-vous dans le stockage local
+    const newAppointment = {
+      id: Date.now().toString(),
+      nom: formData.nom,
+      telephone: formData.telephone,
+      email: formData.email,
+      cin: formData.cin,
+      dateNaissance: formData.dateNaissance,
+      service: formData.service,
+      date: formData.date,
+      heure: formData.heure,
+      commentaires: formData.commentaires,
+      status: 'pending' as const,
+      createdAt: new Date().toISOString()
+    };
 
-  const handleConfirmed = () => {
-    setShowConfirmation(false);
-    setFormData({
-      nom: '',
-      telephone: '',
-      email: '',
-      cin: '',
-      dateNaissance: '',
-      service: '',
-      date: '',
-      heure: '',
-      commentaires: ''
+    appointmentStorage.saveAppointment(newAppointment);
+
+    // Rediriger vers la page de confirmation
+    navigate('/appointment-confirmation', {
+      state: {
+        appointmentData: newAppointment,
+        phoneNumber: formData.telephone
+      }
     });
-  };
 
-  const handleBackToForm = () => {
-    setShowConfirmation(false);
+    console.log('Rendez-vous sauvegardé:', newAppointment);
   };
-
-  if (showConfirmation) {
-    return (
-      <section id="rendez-vous" className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AppointmentConfirmation
-            appointmentData={formData as AppointmentData}
-            onConfirmed={handleConfirmed}
-            onBack={handleBackToForm}
-          />
-        </div>
-      </section>
-    );
-  }
 
   return (
-    <section id="rendez-vous" className="py-20 bg-white">
+    <section id="rendez-vous" className="py-20 bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             {t('appointment.title')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t('appointment.subtitle')}
+          <p className="text-xl text-gray-600">
+            {t('appointment.description')}
           </p>
         </div>
 
-        <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-teal-500 text-white rounded-t-lg">
-            <div className="flex items-center gap-3">
-              <Calendar className="w-8 h-8" />
-              <div>
-                <CardTitle className="text-2xl">{t('appointment.form_title')}</CardTitle>
-                <CardDescription className="text-blue-100">
-                  {t('appointment.form_subtitle')}
-                </CardDescription>
-              </div>
-            </div>
+        <Card className="shadow-2xl border-0">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-gray-900">{t('appointment.card_title')}</CardTitle>
+            <CardDescription className="text-gray-600">{t('appointment.card_description')}</CardDescription>
           </CardHeader>
-          
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="nom" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    {t('appointment.name')} *
-                  </Label>
+                  <Label htmlFor="nom">{t('appointment.name')} *</Label>
                   <Input
-                    id="nom"
                     type="text"
+                    id="nom"
+                    placeholder={t('appointment.name_placeholder')}
                     value={formData.nom}
-                    onChange={(e) => handleInputChange('nom', e.target.value)}
-                    placeholder="Votre nom complet"
-                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
+                    onChange={handleChange}
                     required
                   />
                 </div>
-                
                 <div className="space-y-2">
-                  <Label htmlFor="telephone" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    {t('appointment.phone')} *
-                  </Label>
+                  <Label htmlFor="telephone">{t('appointment.phone')} *</Label>
                   <Input
-                    id="telephone"
                     type="tel"
+                    id="telephone"
+                    placeholder="+212 6XXXXXXXX"
                     value={formData.telephone}
-                    onChange={(e) => handleInputChange('telephone', e.target.value)}
-                    placeholder="+212 6XX XXX XXX"
-                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
+                    onChange={handleChange}
                     required
                   />
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="cin" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <IdCard className="w-4 h-4" />
-                    {t('appointment.cin')} *
-                  </Label>
+                  <Label htmlFor="email">E-mail</Label>
                   <Input
-                    id="cin"
-                    type="text"
-                    value={formData.cin}
-                    onChange={(e) => handleInputChange('cin', e.target.value)}
-                    placeholder="Votre numéro CIN"
-                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
-                    required
+                    type="email"
+                    id="email"
+                    placeholder="votre@email.com"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
-                
                 <div className="space-y-2">
-                  <Label htmlFor="dateNaissance" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Cake className="w-4 h-4" />
-                    {t('appointment.birth_date')} *
-                  </Label>
+                  <Label htmlFor="cin">CIN</Label>
                   <Input
-                    id="dateNaissance"
-                    type="date"
-                    value={formData.dateNaissance}
-                    onChange={(e) => handleInputChange('dateNaissance', e.target.value)}
-                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
-                    required
+                    type="text"
+                    id="cin"
+                    placeholder="Votre CIN"
+                    value={formData.cin}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  {t('appointment.email')}
-                </Label>
+                <Label htmlFor="dateNaissance">{t('appointment.birthdate')} *</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="votre.email@exemple.com"
-                  className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
+                  type="date"
+                  id="dateNaissance"
+                  value={formData.dateNaissance}
+                  onChange={handleChange}
+                  required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  {t('appointment.service')} *
-                </Label>
-                <Select value={formData.service} onValueChange={(value) => handleInputChange('service', value)}>
-                  <SelectTrigger className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300">
-                    <SelectValue placeholder="Sélectionnez le service souhaité" />
+                <Label htmlFor="service">{t('appointment.service')} *</Label>
+                <Select onValueChange={(value) => handleSelectChange('service', value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t('appointment.select_service')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {services.map((service, index) => (
-                      <SelectItem key={index} value={service}>
-                        {service}
+                    {services.map((service) => (
+                      <SelectItem key={service.value} value={service.value}>
+                        {service.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="date" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    {t('appointment.date')} *
-                  </Label>
+                  <Label htmlFor="date">{t('appointment.date')} *</Label>
                   <Input
-                    id="date"
                     type="date"
+                    id="date"
                     value={formData.date}
-                    onChange={(e) => handleInputChange('date', e.target.value)}
-                    className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
-                    min={new Date().toISOString().split('T')[0]}
+                    onChange={handleChange}
                     required
                   />
                 </div>
-                
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    {t('appointment.time')} *
-                  </Label>
-                  <Select value={formData.heure} onValueChange={(value) => handleInputChange('heure', value)}>
-                    <SelectTrigger className="h-12 hover:border-blue-300 focus:border-blue-500 transition-colors duration-300">
-                      <SelectValue placeholder="Sélectionnez l'heure" />
+                  <Label htmlFor="heure">{t('appointment.time')} *</Label>
+                  <Select onValueChange={(value) => handleSelectChange('heure', value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('appointment.select_time')} />
                     </SelectTrigger>
                     <SelectContent>
-                      {heures.map((heure, index) => (
-                        <SelectItem key={index} value={heure}>
+                      {heuresDisponibles.map((heure) => (
+                        <SelectItem key={heure} value={heure}>
                           {heure}
                         </SelectItem>
                       ))}
@@ -262,30 +215,17 @@ export const Appointment = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="commentaires" className="text-sm font-medium text-gray-700">
-                  {t('appointment.comments')}
-                </Label>
+                <Label htmlFor="commentaires">{t('appointment.comments')}</Label>
                 <Textarea
                   id="commentaires"
+                  placeholder={t('appointment.comments_placeholder')}
+                  className="min-h-[80px]"
                   value={formData.commentaires}
-                  onChange={(e) => handleInputChange('commentaires', e.target.value)}
-                  placeholder="Décrivez brièvement vos symptômes ou préoccupations..."
-                  className="min-h-[100px] hover:border-blue-300 focus:border-blue-500 transition-colors duration-300"
+                  onChange={handleChange}
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-800">
-                  <strong>Note importante :</strong> Après envoi, vous recevrez un code de confirmation par SMS 
-                  pour valider votre demande et télécharger votre document de confirmation.
-                </p>
-              </div>
-
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white py-4 text-lg font-medium hover:scale-105 hover:shadow-lg transition-all duration-300 transform"
-              >
+              <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600">
                 {t('appointment.submit')}
               </Button>
             </form>
