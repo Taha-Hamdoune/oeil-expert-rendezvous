@@ -126,6 +126,16 @@ const AdminDashboard = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-6 flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300"
+              >
+                <Home className="w-4 h-4" />
+                Retour à l'accueil
+              </Button>
+            </div>
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-sm font-medium text-gray-700">
@@ -162,6 +172,15 @@ const AdminDashboard = () => {
                 {t('admin.login_button')}
               </Button>
             </form>
+            <div className="mt-6 space-y-3">
+              <Button
+                variant="outline"
+                className="w-full text-sm text-gray-600 hover:bg-gray-50"
+                onClick={() => alert('Fonctionnalité de modification des identifiants à venir')}
+              >
+                Modifier nom d'utilisateur et mot de passe
+              </Button>
+            </div>
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800">
                 <strong>Démo:</strong> Utilisez "admin" / "clinique123"

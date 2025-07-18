@@ -84,25 +84,6 @@ export const Header = () => {
               <span className="hidden lg:inline">{t('header.admin')}</span>
             </Button>
 
-            <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="w-32 h-8 text-xs hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
-                <div className="flex items-center gap-1">
-                  <Languages className="w-3 h-3" />
-                  <SelectValue />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                {languages.map((lang) => (
-                  <SelectItem key={lang.code} value={lang.code}>
-                    <div className="flex items-center gap-2">
-                      <span>{lang.flag}</span>
-                      <span className="text-xs">{lang.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
             <Button
               variant="outline"
               size="sm"
@@ -168,25 +149,6 @@ export const Header = () => {
                   <Shield className="w-4 h-4" />
                   {t('header.admin')}
                 </Button>
-                
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger className="w-full h-10">
-                    <div className="flex items-center gap-2">
-                      <Languages className="w-4 h-4" />
-                      <SelectValue />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languages.map((lang) => (
-                      <SelectItem key={lang.code} value={lang.code}>
-                        <div className="flex items-center gap-2">
-                          <span>{lang.flag}</span>
-                          <span>{lang.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 
                 <Button
                   variant="outline"

@@ -326,10 +326,18 @@ const ServiceDetail = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={() => navigate('/#contact')}
+                  onClick={() => {
+                    navigate('/');
+                    setTimeout(() => {
+                      const element = document.getElementById('contact');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
                   className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700 transition-all duration-300 hover:scale-105"
                 >
-                  Nous contacter
+                  Contactez-nous
                 </Button>
               </div>
             </CardContent>
