@@ -1,6 +1,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Calendar, Award, Users, Heart } from "lucide-react";
+import drAminaPortrait from "@/assets/dr-amina-portrait.jpg";
+import clinicLogo from "@/assets/clinic-logo.jpg";
+import medicalBg1 from "@/assets/medical-bg-1.jpg";
+import medicalBg2 from "@/assets/medical-bg-2.jpg";
 
 export const Hero = () => {
   const scrollToSection = (sectionId: string) => {
@@ -11,11 +15,44 @@ export const Hero = () => {
   };
 
   return (
-    <section id="accueil" className="pt-16 pb-20 bg-gradient-to-br from-blue-50 via-white to-teal-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
-          {/* Contenu */}
-          <div className="mb-12 lg:mb-0">
+    <section id="accueil" className="pt-16 pb-20 bg-gradient-to-br from-blue-50 via-white to-teal-50 relative overflow-hidden">
+      {/* Images d'arrière-plan animées */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-64 h-48 rounded-lg overflow-hidden animate-pulse">
+          <img src={medicalBg1} alt="Medical background" className="w-full h-full object-cover" />
+        </div>
+        <div className="absolute bottom-10 right-10 w-64 h-48 rounded-lg overflow-hidden animate-pulse delay-1000">
+          <img src={medicalBg2} alt="Medical background" className="w-full h-full object-cover" />
+        </div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+          {/* Section Dr. Amina Benali à gauche */}
+          <div className="lg:col-span-3 mb-8 lg:mb-0">
+            <div className="bg-white rounded-2xl shadow-xl p-6 text-center">
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-200">
+                <img 
+                  src={drAminaPortrait} 
+                  alt="Dr. Amina Benali" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="w-16 h-16 mx-auto mb-3">
+                <img 
+                  src={clinicLogo} 
+                  alt="Logo Clinique" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Dr. Amina Benali</h3>
+              <p className="text-blue-600 font-medium text-sm">Chirurgienne Ophtalmologue</p>
+              <p className="text-gray-500 text-xs mt-1">Spécialiste certifiée</p>
+            </div>
+          </div>
+
+          {/* Contenu principal */}
+          <div className="lg:col-span-6 mb-12 lg:mb-0">
             <div className="mb-6">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">
                 ✨ Excellence en chirurgie ophtalmologique
@@ -77,20 +114,21 @@ export const Hero = () => {
             </div>
           </div>
 
-          {/* Image du médecin */}
-          <div className="relative">
+          {/* Image principale à droite */}
+          <div className="lg:col-span-3 relative">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-400 rounded-2xl transform rotate-3"></div>
-              <div className="relative bg-white p-8 rounded-2xl shadow-xl">
-                <div className="w-full h-96 bg-gradient-to-br from-blue-100 to-teal-50 rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-32 h-32 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                      <span className="text-white text-4xl font-bold">AB</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">Dr. Amina Benali</h3>
-                    <p className="text-gray-600">Chirurgienne Ophtalmologue</p>
-                    <p className="text-sm text-gray-500 mt-2">Spécialiste certifiée</p>
-                  </div>
+              <div className="relative bg-white p-6 rounded-2xl shadow-xl">
+                <div className="w-full h-80 rounded-xl overflow-hidden">
+                  <img 
+                    src={drAminaPortrait} 
+                    alt="Dr. Amina Benali" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="mt-4 text-center">
+                  <h3 className="text-lg font-semibold text-gray-800">Excellence médicale</h3>
+                  <p className="text-gray-600 text-sm">Soins ophtalmologiques de pointe</p>
                 </div>
               </div>
             </div>

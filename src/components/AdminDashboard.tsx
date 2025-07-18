@@ -76,8 +76,12 @@ const AdminDashboard = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Identifiants simples pour la démo
-    if (username === 'admin' && password === 'clinique123') {
+    
+    // Récupérer les identifiants stockés ou utiliser les valeurs par défaut
+    const storedUsername = localStorage.getItem('admin_username') || 'admin';
+    const storedPassword = localStorage.getItem('admin_password') || 'clinique123';
+    
+    if (username === storedUsername && password === storedPassword) {
       setIsLoggedIn(true);
     } else {
       alert('Identifiants incorrects');
@@ -176,15 +180,10 @@ const AdminDashboard = () => {
               <Button
                 variant="outline"
                 className="w-full text-sm text-gray-600 hover:bg-gray-50"
-                onClick={() => alert('Fonctionnalité de modification des identifiants à venir')}
+                onClick={() => navigate('/admin/settings')}
               >
                 Modifier nom d'utilisateur et mot de passe
               </Button>
-            </div>
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>Démo:</strong> Utilisez "admin" / "clinique123"
-              </p>
             </div>
           </CardContent>
         </Card>
