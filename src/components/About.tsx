@@ -1,6 +1,8 @@
 
-import { Award, GraduationCap, Stethoscope, CheckCircle } from "lucide-react";
+import { Award, GraduationCap, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import drAminaPortrait from "@/assets/dr-amina-portrait.jpg";
+import clinicLogo from "@/assets/clinic-logo.jpg";
 
 export const About = () => {
   const qualifications = [
@@ -31,19 +33,39 @@ export const About = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Photo et présentation */}
+          {/* Photo et présentation du Dr. Amina Benali */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-8">
-              <div className="w-full h-80 bg-gradient-to-br from-blue-100 to-teal-50 rounded-xl flex items-center justify-center mb-6">
-                <div className="text-center">
-                  <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Stethoscope className="w-12 h-12 text-white" />
+            <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-8 shadow-xl">
+              {/* Portrait du docteur */}
+              <div className="relative mb-6">
+                <div className="w-full h-96 rounded-xl overflow-hidden shadow-lg">
+                  <img 
+                    src={drAminaPortrait} 
+                    alt="Dr. Amina Benali" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Badge avec logo */}
+                <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-3 shadow-lg border-4 border-blue-100">
+                  <div className="w-12 h-12">
+                    <img 
+                      src={clinicLogo} 
+                      alt="Logo Clinique" 
+                      className="w-full h-full object-contain"
+                    />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-800">Dr. Amina Benali</h3>
-                  <p className="text-gray-600">Chirurgienne Ophtalmologue</p>
                 </div>
               </div>
-              <blockquote className="text-gray-700 italic text-center">
+              
+              {/* Informations du docteur */}
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Dr. Amina Benali</h3>
+                <p className="text-blue-600 font-semibold text-lg mb-1">Chirurgienne Ophtalmologue</p>
+                <p className="text-gray-600 text-sm">Spécialiste certifiée</p>
+              </div>
+              
+              {/* Citation */}
+              <blockquote className="text-gray-700 italic text-center leading-relaxed">
                 "Chaque patient mérite une attention personnalisée et des soins de la plus haute qualité. 
                 Mon objectif est de préserver et d'améliorer votre vision avec les techniques les plus avancées."
               </blockquote>

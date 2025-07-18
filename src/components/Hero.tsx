@@ -28,31 +28,8 @@ export const Hero = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
-          {/* Section Dr. Amina Benali à gauche */}
-          <div className="lg:col-span-3 mb-8 lg:mb-0">
-            <div className="bg-white rounded-2xl shadow-xl p-6 text-center">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-200">
-                <img 
-                  src={drAminaPortrait} 
-                  alt="Dr. Amina Benali" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="w-16 h-16 mx-auto mb-3">
-                <img 
-                  src={clinicLogo} 
-                  alt="Logo Clinique" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">Dr. Amina Benali</h3>
-              <p className="text-blue-600 font-medium text-sm">Chirurgienne Ophtalmologue</p>
-              <p className="text-gray-500 text-xs mt-1">Spécialiste certifiée</p>
-            </div>
-          </div>
-
           {/* Contenu principal */}
-          <div className="lg:col-span-6 mb-12 lg:mb-0">
+          <div className="lg:col-span-8 mb-12 lg:mb-0 mx-auto">
             <div className="mb-6">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-4">
                 ✨ Excellence en chirurgie ophtalmologique
@@ -115,7 +92,7 @@ export const Hero = () => {
           </div>
 
           {/* Image principale à droite */}
-          <div className="lg:col-span-3 relative">
+          <div className="lg:col-span-4 relative">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-teal-400 rounded-2xl transform rotate-3"></div>
               <div className="relative bg-white p-6 rounded-2xl shadow-xl">
